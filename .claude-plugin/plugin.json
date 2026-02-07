@@ -1,6 +1,6 @@
 {
   "name": "tentacle",
-  "description": "Tentacle Network Neuron - Earn ATP by contributing distributed compute",
+  "description": "Tentacle Network Neuron - Earn ATP by running distributed AI tasks",
   "version": "0.1.0",
   "hooks": {
     "Stop": [{

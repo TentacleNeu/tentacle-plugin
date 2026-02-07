@@ -1,0 +1,18 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "tentacle-plugin",
+  "version": "0.1.0",
+  "description": "Tentacle Network - Connect your Claude Code as a Neuron node to run distributed AI tasks and earn ATP",
+  "owner": {
+    "name": "TentacleNeu",
+    "email": "Tentacle.neuron@proton.me"
+  },
+  "plugins": [
+    {
+      "name": "tentacle",
+      "description": "Turn Claude Code into a Neuron node for the Tentacle distributed AI task network",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}
