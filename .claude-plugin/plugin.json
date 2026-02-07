@@ -2,20 +2,8 @@
   "name": "tentacle",
   "description": "Tentacle Network Neuron - Earn ATP by running distributed AI tasks",
   "version": "0.1.0",
-  "hooks": {
-    "Stop": [{
-      "hooks": [{
-        "type": "command",
-        "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/stop-hook.js"
-      }],
-      "timeout_ms": 5000
-    }],
-    "PreToolUse": [{
-      "hooks": [{
-        "type": "command",
-        "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/pretooluse-guard.js"
-      }],
-      "timeout_ms": 2000
-    }]
+  "author": {
+    "name": "TentacleNeu",
+    "email": "Tentacle.neuron@proton.me"
   }
 }

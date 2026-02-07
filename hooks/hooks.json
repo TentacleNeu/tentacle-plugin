@@ -1,18 +1,19 @@
 {
-  "Stop": [{
-    "matcher": "",
-    "hooks": [{
-      "type": "command",
-      "command": "node \"$CLAUDE_PLUGIN_ROOT/hooks/stop-hook.js\""
+  "description": "Tentacle Neuron security guard and session management hooks",
+  "hooks": {
+    "Stop": [{
+      "hooks": [{
+        "type": "command",
+        "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/stop-hook.js"
+      }],
+      "timeout_ms": 5000
     }],
-    "timeout_ms": 5000
-  }],
-  "PreToolUse": [{
-    "matcher": "",
-    "hooks": [{
-      "type": "command",
-      "command": "node \"$CLAUDE_PLUGIN_ROOT/hooks/pretooluse-guard.js\""
-    }],
-    "timeout_ms": 1000
-  }]
+    "PreToolUse": [{
+      "hooks": [{
+        "type": "command",
+        "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/pretooluse-guard.js"
+      }],
+      "timeout_ms": 2000
+    }]
+  }
 }
