@@ -1,45 +1,37 @@
-# /neuron-status
+---
+description: Show current Neuron node status and session statistics
+allowed-tools: ["Bash", "Read"]
+---
 
-查看 Neuron 节点状态和统计信息。
+# Neuron Status
 
-## 使用方法
+Display the current status of this Tentacle Neuron node.
 
-```bash
-claude /neuron-status
-claude /neuron-status --profile work
-```
+## Context
 
-## 显示内容
+- Config: !`cat ~/.claude/tentacle-config.json 2>/dev/null || echo "NOT_CONFIGURED"`
+- State: !`cat ${CLAUDE_PLUGIN_ROOT}/state/neuron.local.json 2>/dev/null || echo "NO_STATE"`
+
+## Your task
+
+1. If config shows "NOT_CONFIGURED", tell the user the Neuron is not configured and suggest `/tentacle:tentacle-config`.
+
+2. If state shows "NO_STATE", tell the user the Neuron is not registered and suggest `/tentacle:tentacle-register`.
+
+3. Otherwise, display a formatted status report using the config and state data:
 
 ```
 Tentacle Neuron Status
 ======================
+Neuron ID:   <from state.neuronId>
+Brain URL:   <from config.brainUrl>
+Model Tier:  <from config.modelTier>
+Active:      <from state.active>
 
-Profile: default
-Neuron ID: abc12345-...
-Fingerprint: hash-xxx
-
-Status: Active (Polling)
-Brain: https://tentacle.network
-Model Tier: medium
-
-Statistics:
-- Tasks Completed: 42
-- ATP Earned: 380
-- Success Rate: 95.2%
-- Uptime: 2h 15m
-
-Current Session:
-- Idle Loops: 3/10
-- Last Task: 5 minutes ago
+Session Statistics:
+- Tasks Completed: <from state.completed_tasks>
+- ATP Earned:      <from state.total_atp>
+- Idle Loops:      <from state.idle_count>
 ```
 
-## 实现指令
-
-当用户运行此命令时：
-
-1. 读取配置文件和状态文件
-2. 如果未配置，提示先运行 `/tentacle-config`
-3. 如果未注册，提示先运行 `/tentacle-register`
-4. 格式化并显示状态信息
-5. 可选：调用 Brain API 获取服务端统计
+Do not use any other tools. Just read the files and display the information.
