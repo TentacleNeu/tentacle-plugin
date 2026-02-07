@@ -6,6 +6,21 @@ const input = JSON.parse(fs.readFileSync(0, 'utf8'));
 const toolName = input.tool_name;
 const args = input.arguments || {};
 
+// Guard 仅在 Neuron 激活状态下生效
+const STATE_PATH = path.join(os.homedir(), '.claude', 'plugins', 'tentacle', 'state', 'neuron.local.json');
+let neuronActive = false;
+try {
+  if (fs.existsSync(STATE_PATH)) {
+    const state = JSON.parse(fs.readFileSync(STATE_PATH, 'utf8'));
+    neuronActive = state.active === true;
+  }
+} catch {}
+
+if (!neuronActive) {
+  // Neuron 未激活，放行所有操作
+  process.exit(0);
+}
+
 const WORKSPACE = path.join(os.homedir(), 'tentacle-workspace');
 const WORKSPACE_ABS = path.resolve(WORKSPACE);
 const WORKSPACE_NORMALIZED = WORKSPACE_ABS.replace(/\\/g, '/');
