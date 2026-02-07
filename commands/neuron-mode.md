@@ -22,19 +22,8 @@ Enter a continuous loop that polls the Tentacle Brain for tasks, executes them, 
 
 ### Step 2: Activate Neuron
 
-Update the state file to set `active: true`:
-
 ```bash
-node -e "
-const fs = require('fs');
-const path = require('path');
-const statePath = path.join(require('os').homedir(), '.claude', 'plugins', 'tentacle', 'state', 'neuron.local.json');
-const state = JSON.parse(fs.readFileSync(statePath, 'utf8'));
-state.active = true;
-state.idle_count = 0;
-fs.writeFileSync(statePath, JSON.stringify(state, null, 2));
-console.log('Neuron activated. ID: ' + state.neuronId);
-"
+node ${CLAUDE_PLUGIN_ROOT}/scripts/activate-neuron.js
 ```
 
 ### Step 3: Poll loop
@@ -43,12 +32,7 @@ Enter a loop (up to 20 iterations). In each iteration:
 
 1. **Poll for task**:
 ```bash
-node -e "
-const { callBrain, getState } = require('${CLAUDE_PLUGIN_ROOT}/lib/api.js');
-callBrain('/api/tasks/poll', 'GET').then(res => {
-  console.log(JSON.stringify(res));
-}).catch(e => { console.error('Poll error:', e.message); process.exit(1); });
-"
+node ${CLAUDE_PLUGIN_ROOT}/scripts/poll-task.js
 ```
 
 2. **If a task is returned** (`res.task` is not null):
@@ -57,15 +41,9 @@ callBrain('/api/tasks/poll', 'GET').then(res => {
    - Execute the task using your normal capabilities (read files, write code, run commands - all within `~/tentacle-workspace`)
    - Submit the result:
 ```bash
-node -e "
-const { callBrain } = require('${CLAUDE_PLUGIN_ROOT}/lib/api.js');
-callBrain('/api/tasks/submit', 'POST', {
-  taskId: '<TASK_ID>',
-  result: '<YOUR_RESULT>'
-}).then(res => console.log(JSON.stringify(res)))
-  .catch(e => console.error('Submit error:', e.message));
-"
+node ${CLAUDE_PLUGIN_ROOT}/scripts/submit-task.js <TASK_ID> '<YOUR_RESULT>'
 ```
+   - For long results, use the environment variable: `TENTACLE_RESULT='<LONG_RESULT>' node ${CLAUDE_PLUGIN_ROOT}/scripts/submit-task.js <TASK_ID> placeholder`
 
 3. **If no task available**: Wait 15 seconds, then increment idle count. If idle count reaches 10, deactivate and stop.
 
@@ -75,17 +53,9 @@ sleep 15
 
 ### Step 4: Deactivate on exit
 
-When the loop ends (max iterations or idle limit), update state:
+When the loop ends (max iterations or idle limit):
 ```bash
-node -e "
-const fs = require('fs');
-const path = require('path');
-const statePath = path.join(require('os').homedir(), '.claude', 'plugins', 'tentacle', 'state', 'neuron.local.json');
-const state = JSON.parse(fs.readFileSync(statePath, 'utf8'));
-state.active = false;
-fs.writeFileSync(statePath, JSON.stringify(state, null, 2));
-console.log('Neuron deactivated. Tasks completed: ' + state.completed_tasks + ', ATP earned: ' + state.total_atp);
-"
+node ${CLAUDE_PLUGIN_ROOT}/scripts/deactivate-neuron.js
 ```
 
 **IMPORTANT**: All file operations during task execution MUST be within `~/tentacle-workspace`. Do not access files outside this directory.

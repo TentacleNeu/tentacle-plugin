@@ -8,12 +8,50 @@
       }],
       "timeout_ms": 5000
     }],
-    "PreToolUse": [{
+    "PreToolUse": [
+      {
+        "matcher": "tool == \"Bash\"",
+        "hooks": [{
+          "type": "command",
+          "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/pretooluse-guard.js"
+        }],
+        "timeout_ms": 2000,
+        "description": "Neuron sandbox: bash command safety check"
+      },
+      {
+        "matcher": "tool == \"Write\" || tool == \"Edit\" || tool == \"MultiEdit\" || tool == \"NotebookEdit\"",
+        "hooks": [{
+          "type": "command",
+          "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/pretooluse-guard.js"
+        }],
+        "timeout_ms": 1000,
+        "description": "Neuron sandbox: workspace write path isolation"
+      },
+      {
+        "matcher": "tool == \"Read\" || tool == \"Glob\" || tool == \"Grep\"",
+        "hooks": [{
+          "type": "command",
+          "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/pretooluse-guard.js"
+        }],
+        "timeout_ms": 500,
+        "description": "Neuron sandbox: workspace read path isolation"
+      }
+    ],
+    "SessionStart": [{
       "hooks": [{
         "type": "command",
-        "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/pretooluse-guard.js"
+        "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/session-start.js"
       }],
-      "timeout_ms": 2000
+      "timeout_ms": 2000,
+      "description": "Neuron: detect and reset abnormal session termination"
+    }],
+    "SessionEnd": [{
+      "hooks": [{
+        "type": "command",
+        "command": "node ${CLAUDE_PLUGIN_ROOT}/hooks/session-end.js"
+      }],
+      "timeout_ms": 3000,
+      "description": "Neuron: auto-deactivate and report session stats"
     }]
   }
 }

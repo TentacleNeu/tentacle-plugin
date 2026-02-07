@@ -69,6 +69,28 @@ if (toolName === 'Bash') {
     /\bcurl\b.*\|\s*(ba)?sh/i,               // 远程代码执行
     /\bwget\b.*\|\s*(ba)?sh/i,               // 远程代码执行
     /\beval\s/i,                              // eval 注入
+
+    // 环境变量展开 (绕过 ~/xxx 检测)
+    /\$HOME\b/i,
+    /\$\{HOME\}/i,
+    /\$USER\b/i,
+    /\$\{USER\}/i,
+
+    // 命令替换 (间接执行)
+    /\$\(.*\)/,
+    /`[^`]+`/,
+
+    // 编码绕过
+    /\bbase64\b/i,
+    /\bxxd\b/i,
+
+    // 间接脚本执行
+    /\bpython[23]?\s+-c\b/i,
+    /\bruby\s+-e\b/i,
+    /\bperl\s+-e\b/i,
+
+    // 符号链接到外部
+    /\bln\s+(-[a-z]*s|-s)\b/i,
   ];
 
   // 敏感文件/目录访问模式

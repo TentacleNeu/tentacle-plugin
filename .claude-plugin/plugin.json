@@ -1,9 +1,10 @@
 {
   "name": "tentacle",
   "description": "Tentacle Network Neuron - Earn ATP by running distributed AI tasks",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "TentacleNeu",
     "email": "Tentacle.neuron@proton.me"
-  }
+  },
+  "skills": ["./commands/"]
 }
